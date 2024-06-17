@@ -33,13 +33,14 @@ class Client(Database):
         md5, sha256, entry = get_file_hash(
             file, self.product, self.revision, self.hash, self.salt
         )
-        query = "INSERT INTO catalog(product, build_machine, revision, repository_hash, md5_hash, sha256_hash, entry_hash, update_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        query = "INSERT INTO catalog(product, build_machine, revision, filename, repository_hash, md5_hash, sha256_hash, entry_hash, update_time) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         self.execute(
             query,
             (
                 self.product,
                 self.build_machine,
                 self.revision,
+                os.path.basename(file),
                 self.hash,
                 md5,
                 sha256,
@@ -76,5 +77,5 @@ class Client(Database):
         return False
 
     def create_table(self):
-        query = "CREATE TABLE catalog (id int(11) NOT NULL AUTO_INCREMENT,product varchar(255) NOT NULL,build_machine varchar(255) NOT NULL,revision varchar(255) NOT NULL,repository_hash varchar(255) NOT NULL,md5_hash varchar(255) NOT NULL,sha256_hash varchar(255) NOT NULL,entry_hash varchar(255) NOT NULL,update_time datetime NOT NULL,PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+        query = "CREATE TABLE catalog (id int(11) NOT NULL AUTO_INCREMENT,product varchar(255) NOT NULL,build_machine varchar(255) NOT NULL,revision varchar(255) NOT NULL,filename varchar(255) NOT NULL,repository_hash varchar(255) NOT NULL,md5_hash varchar(255) NOT NULL,sha256_hash varchar(255) NOT NULL,entry_hash varchar(255) NOT NULL,update_time datetime NOT NULL,PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
         self.execute(query)
